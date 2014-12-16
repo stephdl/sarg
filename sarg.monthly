@@ -1,0 +1,17 @@
+#!/bin/bash
+LOG_FILES=
+for FILE in /var/log/squid/access.log*; do
+    LOG_FILES="$LOG_FILES -l $FILE"
+done
+
+# Get yesterday's date
+YESTERDAY=$(date --date "1 day ago" +%d/%m/%Y)
+
+# Get 1 month ago date
+MONTHAGO=$(date --date "1 month ago" +%d/%m/%Y)
+
+exec /usr/bin/sarg \
+    $LOG_FILES \
+    -o /var/www/sarg/monthly \
+    -d $MONTHAGO-$YESTERDAY &>/dev/null
+exit 0
